@@ -4,11 +4,11 @@ The final self-decide project from Udacity
 UWSurvivalGuide is made based on the API from University of Waterloo.
 There are 4 sections, which are News, Events, Parking and Food.
 
-![7500d04c-b80f-4541-9bed-044c35af4e62](https://cloud.githubusercontent.com/assets/16344019/17907101/370d052c-6948-11e6-8d7c-251bf19f8481.png)
+![f3ee4a4c-2da8-493b-aca2-3ed25abcfa06](https://cloud.githubusercontent.com/assets/16344019/17907145/6cb1517e-6948-11e6-8c33-8ed3e5163176.png)
+![14c4e23c-1af0-4e79-bd91-cfd92c32f94f](https://cloud.githubusercontent.com/assets/16344019/17907156/75b55cfc-6948-11e6-8c28-888e6ef58567.png)
+
 
 ##In News section, users can:
-
-![56c99ff4-332c-42a1-8e71-8bca77760b54](https://cloud.githubusercontent.com/assets/16344019/17907106/3b7b0fb4-6948-11e6-8b32-ff4332e8305b.png)
 
 1. View news in list style, where each page has 5 news with News title, news image(if there is one, otherwise the campus bubble will replace it's position), and a short beginning words from tne news.
 2. click the next page or previous page to change the page, or enter the page they want to go.
@@ -16,8 +16,6 @@ There are 4 sections, which are News, Events, Parking and Food.
 4. The News section has self-refresh function. After user quit the app after 3 hours, the News section will refresh itself when users go back to the app.
 
 ##In Events section, users can:
-
-![25ae615c-6bae-4162-b92c-3f72d47e4efc](https://cloud.githubusercontent.com/assets/16344019/17907153/73d4d91c-6948-11e6-8a8b-eb602782642d.png)
 
 1. see all the events posted by University of Waterloo, either on campus or off campus. In the lists, only event type, name and time are included.
 2. when user select an event, the event description will show up too.
@@ -30,8 +28,6 @@ There are 4 sections, which are News, Events, Parking and Food.
 
 ##In Parking section, users can:
 
-![f3ee4a4c-2da8-493b-aca2-3ed25abcfa06](https://cloud.githubusercontent.com/assets/16344019/17907145/6cb1517e-6948-11e6-8c33-8ed3e5163176.png)
-
 1. see 5 sections, Monitored, Visitor, Permit, meter and Building.
 2. In Monitored section, there are 4 parking spots with real date available. This section is applied by KDCircularProgress view on these 4 parking spots. User can refresh the data by select the Refresh button.
 3. User can also select the parking spot to see it on the map. 
@@ -39,8 +35,6 @@ There are 4 sections, which are News, Events, Parking and Food.
 5. At the top right side, there is a "Direction" kind like button, users will see all the parking spots all the mapView with parking styles.
 
 6. Food Section,
-
-![14c4e23c-1af0-4e79-bd91-cfd92c32f94f](https://cloud.githubusercontent.com/assets/16344019/17907156/75b55cfc-6948-11e6-8c28-888e6ef58567.png)
 
 1. The first screen users will see is all the Food outlets with name image on a table view.
 2. After select one outlet, extra information will show up in an view controller including building, description, direction button, open hours, and Service.
