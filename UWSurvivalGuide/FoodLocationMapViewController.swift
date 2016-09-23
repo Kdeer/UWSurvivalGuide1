@@ -21,13 +21,13 @@ class FoodLocationMapViewController: UIViewController, MKMapViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapView.mapType = .Satellite
+        mapView.mapType = .satellite
         mapView.delegate = self
     }
     
     var placemark: MKPlacemark!
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         let annotation = MKPointAnnotation()
@@ -45,14 +45,14 @@ class FoodLocationMapViewController: UIViewController, MKMapViewDelegate{
         
     }
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
                             getLocation()
         }
 
     }
     
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
 
     }
     
@@ -68,23 +68,23 @@ class FoodLocationMapViewController: UIViewController, MKMapViewDelegate{
                         if let selectedPin = self.placemark{
                             let mapItem = MKMapItem(placemark: selectedPin)
                             let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-                            mapItem.openInMapsWithLaunchOptions(launchOptions)
+                            mapItem.openInMaps(launchOptions: launchOptions)
                         }
             }
         })
     }
 
 
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
         
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId)
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
         
         let RunImage = UIImage(named: "direction")
-        let RunButton = UIButton(type: .Custom)
-        RunButton.frame = CGRectMake(0, 0, 35, 35)
-        RunButton.setImage(RunImage, forState: .Normal)
+        let RunButton = UIButton(type: .custom)
+        RunButton.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        RunButton.setImage(RunImage, for: UIControlState())
         
         if pinView == nil {
             pinView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)

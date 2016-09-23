@@ -58,9 +58,9 @@ class ExpectedEventViewController: UIViewController, UITableViewDelegate, UITabl
         
         if self.sectionTime.count > 0 {
         for i in 0...self.sectionTime.count - 1 {
-            if self.sectionTime[i][0].rangeOfString("To")?.isEmpty == false {
+            if self.sectionTime[i][0].range(of: "To")?.isEmpty == false {
                 let fullTime = self.sectionTime[i][0]
-                let fullTimeArr = fullTime.componentsSeparatedByString("To ")
+                let fullTimeArr = fullTime.components(separatedBy: "To ")
                 self.expiredOrNot[i] = expireCheck(fullTimeArr[1])
             }else {
                 self.expiredOrNot[i] = expireCheck(self.sectionTime[i][0])
@@ -71,89 +71,89 @@ class ExpectedEventViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.reloadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchAndLoad()
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionName[section]
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return sectionName.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sectionTitle[section].count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! EventTableViewCell
-        cell.exTimeLabel.text = sectionTime[indexPath.section][indexPath.row]
-        cell.exTypeLabel.text = sectionType[indexPath.section][indexPath.row]
-        cell.exTitleLabel.text = sectionTitle[indexPath.section][indexPath.row]
-        cell.expiredLabel1.hidden = !self.expiredOrNot[indexPath.section]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EventTableViewCell
+        cell.exTimeLabel.text = sectionTime[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        cell.exTypeLabel.text = sectionType[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        cell.exTitleLabel.text = sectionTitle[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        cell.expiredLabel1.isHidden = !self.expiredOrNot[(indexPath as NSIndexPath).section]
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("EventDetailViewController") as! EventDetailViewController
-        let site = ExpectedEventList[indexPath.section].site
-        let id = ExpectedEventList[indexPath.section].id
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "EventDetailViewController") as! EventDetailViewController
+        let site = ExpectedEventList[(indexPath as NSIndexPath).section].site
+        let id = ExpectedEventList[(indexPath as NSIndexPath).section].id
         controller.eventSite = site
-        controller.eventID = Int(id)
-        controller.link = ExpectedEventList[indexPath.section].link
-        controller.isExpired = self.expiredOrNot[indexPath.section]
+        controller.eventID = Int(id!)
+        controller.link = ExpectedEventList[(indexPath as NSIndexPath).section].link
+        controller.isExpired = self.expiredOrNot[(indexPath as NSIndexPath).section]
         controller.isExpected = true
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
-        if editingStyle == .Delete{
+        if editingStyle == .delete{
             
             self.tableView.beginUpdates()
             let indexSet = NSMutableIndexSet()
-            indexSet.addIndex(indexPath.section)
+            indexSet.add((indexPath as NSIndexPath).section)
 
-            sharedContext.deleteObject(self.ExpectedEventList[indexPath.section])
-            self.ExpectedEventList.removeAtIndex(indexPath.section)
+            sharedContext.delete(self.ExpectedEventList[(indexPath as NSIndexPath).section])
+            self.ExpectedEventList.remove(at: (indexPath as NSIndexPath).section)
             
-            self.sectionName.removeAtIndex(indexPath.section)
-                self.sectionTime.removeAtIndex(indexPath.section)
-                self.sectionType.removeAtIndex(indexPath.section)
-                self.sectionTitle.removeAtIndex(indexPath.section)
+            self.sectionName.remove(at: (indexPath as NSIndexPath).section)
+                self.sectionTime.remove(at: (indexPath as NSIndexPath).section)
+                self.sectionType.remove(at: (indexPath as NSIndexPath).section)
+                self.sectionTitle.remove(at: (indexPath as NSIndexPath).section)
 
-            tableView.deleteSections(indexSet, withRowAnimation: .Fade)
+            tableView.deleteSections(indexSet as IndexSet, with: .fade)
             saveContext()
             tableView.endUpdates()
             
         }
     }
     
-    func expireCheck(theTime: String) -> Bool {
+    func expireCheck(_ theTime: String) -> Bool {
         
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
-        dateFormatter.dateFromString(theTime)
-        let theDate = dateFormatter.dateFromString(theTime)
-        let calendar = NSCalendar.currentCalendar()
-        let components1 = calendar.components([.Day, .Month, .Year], fromDate: theDate!)
+        dateFormatter.date(from: theTime)
+        let theDate = dateFormatter.date(from: theTime)
+        let calendar = Calendar.current
+        let components1 = (calendar as NSCalendar).components([.day, .month, .year], from: theDate!)
         let yearEvent = components1.year
         let monthEvent = components1.month
         let dayEvent = components1.day
         
-        let date = NSDate()
-        let components = calendar.components([.Day, .Month, .Year], fromDate: date)
+        let date = Date()
+        let components = (calendar as NSCalendar).components([.day, .month, .year], from: date)
         let yearNow = components.year
         let monthNow = components.month
         let dayNow = components.day
         
-        if yearNow > yearEvent || (yearNow == yearEvent && monthNow > monthEvent) || (yearNow == yearEvent && monthNow == monthEvent && dayNow > dayEvent){
+        if yearNow! > yearEvent! || (yearNow! == yearEvent! && monthNow! > monthEvent!) || (yearNow! == yearEvent! && monthNow! == monthEvent! && dayNow! > dayEvent!){
             
             return true
         }else {

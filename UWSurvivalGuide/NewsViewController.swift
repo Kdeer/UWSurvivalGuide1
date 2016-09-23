@@ -9,6 +9,26 @@
 import UIKit
 import Foundation
 import CoreData
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 
 class NewsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -29,7 +49,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     var imageURL = String()
     
     var refresh: Bool {
-        return (UIApplication.sharedApplication().delegate as! AppDelegate).refresh
+        return (UIApplication.shared.delegate as! AppDelegate).refresh
     }
 
     
@@ -40,15 +60,15 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 400
         textField.delegate = self 
-        (UIApplication.sharedApplication().delegate as! AppDelegate).myViewController = self
+        (UIApplication.shared.delegate as! AppDelegate).myViewController = self
         
         fetchAndLoad()
 
     }
     
-    override func viewWillAppear(animated: Bool) {
-        print("in view Will Appear")
-        print(refresh)
+    override func viewWillAppear(_ animated: Bool) {
+
+//        print(newsList[0].descriptions)
         subscribeToKeyboardNotifications()
 
         print("the newListNumber is \(self.newsList.count)")
@@ -57,7 +77,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         print("The condition Number is \(self.condition)")
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
     }
@@ -65,11 +85,11 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     
     func fetchAndLoad() {
-        freshingIndicator.hidden = true
+        freshingIndicator.isHidden = true
         if refresh == true {
             
-            tableView.hidden = true
-            freshingIndicator.hidden = false
+            tableView.isHidden = true
+            freshingIndicator.isHidden = false
             freshingIndicator.startAnimating()
             print("refreshing time")
             if self.newsList.count > 0 {
@@ -81,9 +101,9 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
             getNewsData()
             
         }else {
-            self.TheNumberI = NSUserDefaults.standardUserDefaults().integerForKey("TheNumberI")
-            self.condition = NSUserDefaults.standardUserDefaults().integerForKey("condition")
-            self.TheDataNumber = NSUserDefaults.standardUserDefaults().integerForKey("TheDataNumber")
+            self.TheNumberI = UserDefaults.standard.integer(forKey: "TheNumberI")
+            self.condition = UserDefaults.standard.integer(forKey: "condition")
+            self.TheDataNumber = UserDefaults.standard.integer(forKey: "TheDataNumber")
             self.textField.placeholder = "\(self.TheNumberI/5+1)/\(self.TheDataNumber/5+1)"
             newsList = fetchAllNews()
             if newsList.isEmpty == false {
@@ -99,50 +119,48 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.newsList.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! NewsTableViewCell
-        cell.indicator.hidden = true
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! NewsTableViewCell
+        cell.indicator.isHidden = true
         if newsList.count > 0 {
-        let newsRow = newsList[indexPath.row]
+        let newsRow = newsList[(indexPath as NSIndexPath).row]
         cell.titleLabel.text = newsRow.title
 
-        if newsRow.descriptions != nil{
-            if let doc = HTML(html: newsRow.descriptions!, encoding: NSUTF8StringEncoding){
-            let length = newsRow.descriptions.characters.count
+        if newsRow.descriptions_raw != nil{
+            if let doc = HTML(html: newsRow.descriptions_raw!, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)){
+            let length = doc.content!.characters.count
             if length > 100 {
-        cell.descriptionLabel.text = doc.content![0...100] + " ..."
-        }else {
-            cell.descriptionLabel.text = doc.content![0..<length-1]
-            }
-        }
-        }else if newsRow.descriptions_raw != nil{
-            if let doc = HTML(html: newsRow.descriptions_raw!, encoding: NSUTF8StringEncoding){
-                
-                let length = doc.content?.characters.count
-                if length > 100 {
-                    cell.descriptionLabel.text = doc.content![0...100] + " ..."
-                }else {
-                    cell.descriptionLabel.text = doc.content![0..<length!-1]
+//        let newsString = String(doc.content!)
+                let index1 = doc.content!.index(doc.content!.startIndex, offsetBy: 90)
+                cell.descriptionLabel.text = (doc.content?.substring(to: index1))! + " ..."
+//        cell.descriptionLabel.text = doc.content!.substring(1..<90) + " ..."
+            }else {
+//                let newsString = String(doc.content!)
+            cell.descriptionLabel.text = doc.content!.substring(0..<(length-10))
+
                 }
             }
+        }else {
+            
+            cell.descriptionLabel.text = newsRow.descriptions
             }
         
         
         
         var posterImage = UIImage(named: "campus bubble")
-        cell.newsImageView.contentMode = .ScaleAspectFit
+        cell.newsImageView.contentMode = .scaleAspectFit
             
             if newsRow.imageURL == nil || newsRow.imageURL == "" {
                 posterImage = UIImage(named: "Campus Bubble")!
             }else if newsRow.newsImage != nil {
                 posterImage = newsRow.newsImage!
             }else {
-                cell.indicator.hidden = false
+                cell.indicator.isHidden = false
                 cell.indicator.startAnimating()
                 let task = UWSGFoodClientModel.sharedInstance().taskForImage(newsRow.imageURL) {(imageData, error) in
                     
@@ -151,7 +169,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
                             newsRow.newsImage = UIImage(data: data)
                             tableView.reloadData()
                             cell.indicator.stopAnimating()
-                            cell.indicator.hidden = true
+                            cell.indicator.isHidden = true
                         }
                     }
                 }
@@ -167,65 +185,73 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
 //        let cell = tableView.cellForRowAtIndexPath(indexPath) as! NewsTableViewCell
         
-        let newsRow = newsList[indexPath.row]
+        let newsRow = newsList[(indexPath as NSIndexPath).row]
 
 //        if newsRow.descriptions != nil {
 //                self.descriptionString = newsRow.descriptions!
 //            }else
             if newsRow.descriptions_raw != nil {
                         
-            if let doc = HTML(html: newsRow.descriptions_raw!, encoding: NSUTF8StringEncoding){
+            if let doc = HTML(html: newsRow.descriptions_raw!, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)){
                 self.descriptionString = doc.content!
             }
                 }else {
-                    let app = UIApplication.sharedApplication()
+                    let app = UIApplication.shared
                     if newsRow.link != nil {
-                        app.openURL(NSURL(string: newsRow.link!)!)
+                        app.openURL(URL(string: newsRow.link!)!)
             }
         }
         let time = "Published at " + self.timeCheck(newsRow.published) + ", Updated at \(self.timeCheck(newsRow.updatedAt))"
         if newsRow.imageURL != nil {
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("NewsDetailViewController") as! NewsDetailViewController
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "NewsDetailViewController") as! NewsDetailViewController
             controller.titleLabelText = newsRow.title
             controller.timeLabelText = time
             controller.descriptionString = self.descriptionString
 
             controller.imageURL = newsRow.imageURL
             controller.newsList = newsRow
-
+            
+            
             self.navigationController!.pushViewController(controller, animated: true)
         }else {
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("NewsDetailViewController1") as! NewsDetailViewController1
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "NewsDetailViewController1") as! NewsDetailViewController1
             controller.titleLabelText = newsRow.title
             controller.timeLabelText = time
             controller.descriptionString = self.descriptionString
+            
+            
             self.navigationController!.pushViewController(controller, animated: true)
         }
         
         timeCheck(newsRow.updatedAt)
     }
     
-    @IBAction func NextPageButtonPressed(sender: AnyObject) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "withImage" {
+        }
+    }
+    
+    @IBAction func NextPageButtonPressed(_ sender: AnyObject) {
         
 
-        tableView.hidden = true
+        tableView.isHidden = true
         if self.condition == 2 {
-        nextButton.enabled = false
+        nextButton.isEnabled = false
             if self.newsList.count > 0 {
             deleteThings()
         TheNumberI! += 5
-            NSUserDefaults.standardUserDefaults().setInteger(TheNumberI, forKey: "TheNumberI")
+            UserDefaults.standard.set(TheNumberI, forKey: "TheNumberI")
         
         
         getNewsData()
             textField.placeholder = "\(self.TheNumberI/5+1)/\(self.TheDataNumber/5+1)"
             }else {
                 TheNumberI! += 5
-                NSUserDefaults.standardUserDefaults().setInteger(TheNumberI, forKey: "TheNumberI")
+                UserDefaults.standard.set(TheNumberI, forKey: "TheNumberI")
                 getNewsData()
             }
 
@@ -233,28 +259,28 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
             print("you are reaching the last page")
             
         }
-        tableView.setContentOffset(CGPointZero, animated: true)
+        tableView.setContentOffset(CGPoint.zero, animated: true)
     }
     
-    @IBAction func PreviousPageButtonPressed(sender: AnyObject) {
+    @IBAction func PreviousPageButtonPressed(_ sender: AnyObject) {
         
-        previousButton.enabled = false
+        previousButton.isEnabled = false
             deleteThings()
 
         if TheNumberI >= 5 {
         TheNumberI! -= 5
             
-        NSUserDefaults.standardUserDefaults().setInteger(TheNumberI, forKey: "TheNumberI")
+        UserDefaults.standard.set(TheNumberI, forKey: "TheNumberI")
             getNewsData()
             textField.placeholder = "\(self.TheNumberI/5+1)/\(self.TheDataNumber/5+1)"
         }else{
             print("Reaching the first page")
         }
-        tableView.setContentOffset(CGPointZero, animated: true)
+        tableView.setContentOffset(CGPoint.zero, animated: true)
         
     }
     
-    @IBAction func GoButtonPressed(sender: AnyObject) {
+    @IBAction func GoButtonPressed(_ sender: AnyObject) {
         
         if textField.text?.isEmpty == true {
             print("Please enter a number")
@@ -263,11 +289,11 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else {
             deleteThings()
             self.TheNumberI = Int(textField.text!)! * 5 - 5
-            NSUserDefaults.standardUserDefaults().setInteger(TheNumberI, forKey: "TheNumberI")
+            UserDefaults.standard.set(TheNumberI, forKey: "TheNumberI")
             textField.placeholder = "\(self.TheNumberI/5+1)/\(self.TheDataNumber/5+1)"
             getNewsData()
             textField.text?.removeAll()
-            tableView.setContentOffset(CGPointZero, animated: true)
+            tableView.setContentOffset(CGPoint.zero, animated: true)
         }
     }
     

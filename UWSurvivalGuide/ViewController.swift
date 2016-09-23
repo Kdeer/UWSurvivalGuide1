@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         specialAffect()
     }
@@ -25,15 +25,15 @@ class ViewController: UIViewController {
         
         self.stackFlowView.center.y = self.view.frame.height + 130
         
-        UIView.animateWithDuration(0.7, delay: 0, options: .CurveEaseOut, animations: ({self.stackFlowView.center.y = self.view.frame.height/2}), completion: nil)
+        UIView.animate(withDuration: 0.7, delay: 0, options: .curveEaseOut, animations: ({self.stackFlowView.center.y = self.view.frame.height/2}), completion: nil)
 
     }
     
-    @IBAction func parkingButtonPressed(sender: AnyObject) {
+    @IBAction func parkingButtonPressed(_ sender: AnyObject) {
         
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("parkingTabView") as! UITabBarController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "parkingTabView") as! UITabBarController
         
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
         
         

@@ -33,7 +33,7 @@ class BuildingParkingViewController: UIViewController, UITableViewDelegate, UITa
         
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
-        refreshControl.addTarget(self, action: #selector(VisitorParkingTableViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(VisitorParkingTableViewController.refresh), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         
         self.definesPresentationContext = true
@@ -53,7 +53,7 @@ class BuildingParkingViewController: UIViewController, UITableViewDelegate, UITa
     func refresh(){
         if buildingList.count > 0 {
             for i in 0...buildingList.count - 1 {
-                sharedContext.deleteObject(buildingList[i])
+                sharedContext.delete(buildingList[i])
                 
             }
             saveContext()
@@ -77,40 +77,40 @@ class BuildingParkingViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if resultSearchController.active {
+        if resultSearchController.isActive {
             return filteredResults.count
         }else {
             return buildingList.count
         }
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        filteredResults.removeAll(keepCapacity: false)
+    func updateSearchResults(for searchController: UISearchController) {
+        filteredResults.removeAll(keepingCapacity: false)
         let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (self.titleArray as NSArray).filteredArrayUsingPredicate(searchPredicate)
+        let array = (self.titleArray as NSArray).filtered(using: searchPredicate)
         filteredResults = array as! [String]
         
         tableView.reloadData()
     }
     
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-        if resultSearchController.active {
-            cell.textLabel!.text = self.filteredResults[indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        if resultSearchController.isActive {
+            cell.textLabel!.text = self.filteredResults[(indexPath as NSIndexPath).row]
             return cell
         }else {
-        let buildingRow = buildingList[indexPath.row].building_name
+        let buildingRow = buildingList[(indexPath as NSIndexPath).row].building_name
         cell.textLabel?.text = buildingRow
         return cell
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapParkingLocationViewController") as! MapParkingLocationViewController
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MapParkingLocationViewController") as! MapParkingLocationViewController
+        let cell = tableView.cellForRow(at: indexPath)
         print(cell?.textLabel?.text)
         print(buildingList.count)
         print(buildingList[10].building_name)
@@ -124,20 +124,20 @@ class BuildingParkingViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
 
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    @IBAction func dismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
     func getBuilding(){
-        UWSGFoodClientModel.sharedInstance().taskForGetMethod("buildings/list.json", parameters: [:]){(result, error) in
+        _ = UWSGFoodClientModel.sharedInstance().taskForGetMethod("buildings/list.json", parameters: [:]){(result, error) in
             
             if error == nil{
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [[String:AnyObject]]{
+                    if let data = result?["data"] as? [[String:AnyObject]]{
                         let buildingList = data.map() {(dictionary: [String:AnyObject]) -> BuildingList in
                             let buildingList = BuildingList(dictionary: dictionary, context: self.sharedContext)
                             return buildingList
@@ -157,11 +157,10 @@ class BuildingParkingViewController: UIViewController, UITableViewDelegate, UITa
     func fetchAllPins() -> [BuildingList] {
         
         // Create the Fetch Request
-        let fetchRequest = NSFetchRequest(entityName: "BuildingList")
-        
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "BuildingList")
         // Execute the Fetch Request
         do {
-            return try sharedContext.executeFetchRequest(fetchRequest) as! [BuildingList]
+            return try sharedContext.fetch(fetchRequest) as! [BuildingList]
         } catch  let error as NSError {
             print("Error in fetchAllActors(): \(error)")
             return [BuildingList]()

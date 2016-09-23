@@ -35,7 +35,7 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
 
         tableView.delegate = self
-        tableView.contentInset = UIEdgeInsetsZero
+        tableView.contentInset = UIEdgeInsets.zero
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 400
         
@@ -56,15 +56,15 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         howManyExpected()
 
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        filteredResults.removeAll(keepCapacity: false)
+    func updateSearchResults(for searchController: UISearchController) {
+        filteredResults.removeAll(keepingCapacity: false)
         let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (self.searchedResultsArray as NSArray).filteredArrayUsingPredicate(searchPredicate)
+        let array = (self.searchedResultsArray as NSArray).filtered(using: searchPredicate)
         filteredResults = array as! [String]
         
         tableView.reloadData()
@@ -79,17 +79,17 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if resultSearchController.active {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if resultSearchController.isActive {
             return ""
         } else {
         return sectionName[section]
         }
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         
-        if resultSearchController.active {
+        if resultSearchController.isActive {
             return filteredResults.count
         }else {
         
@@ -97,49 +97,49 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if resultSearchController.active {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if resultSearchController.isActive {
             return filteredResults.count
         }else {
         return sectionTime[section].count
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! EventTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EventTableViewCell
 
-        if resultSearchController.active{
+        if resultSearchController.isActive{
             print(self.filteredResults.count)
-            cell.titleLabel?.text = self.filteredResults[indexPath.row]
-            cell.typeLabel.hidden = true
-            cell.timeLabel.hidden =  true
-            cell.expectedButton.hidden = true
+            cell.titleLabel?.text = self.filteredResults[(indexPath as NSIndexPath).row]
+            cell.typeLabel.isHidden = true
+            cell.timeLabel.isHidden =  true
+            cell.expectedButton.isHidden = true
             return cell
         }else {
         
-        cell.typeLabel.hidden = false
-            cell.timeLabel.hidden = false
-        cell.titleLabel.text = sectionTitle[indexPath.section][0]
+        cell.typeLabel.isHidden = false
+            cell.timeLabel.isHidden = false
+        cell.titleLabel.text = sectionTitle[(indexPath as NSIndexPath).section][0]
         for i in 0...sectionType.count - 1 {
             if sectionType[i].isEmpty == true {
                 sectionType[i] = ["Not Attributed"]
             }
         }
-        cell.typeLabel.text = "Type:" + " " + sectionType[indexPath.section][0]
+        cell.typeLabel.text = "Type:" + " " + sectionType[(indexPath as NSIndexPath).section][0]
         
-        if indexPath.row > 0 {
+        if (indexPath as NSIndexPath).row > 0 {
             cell.titleLabel.text = ""
             cell.typeLabel.text = ""
         }
         
         if expectedList.isEmpty == false && allEventList.isEmpty == false {
-            cell.expectedButton.hidden = !whetherOrNot[indexPath.section]
+            cell.expectedButton.isHidden = !whetherOrNot[(indexPath as NSIndexPath).section]
         }
         
-        cell.timeLabel.text = sectionTime[indexPath.section][indexPath.row]
+        cell.timeLabel.text = sectionTime[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
             
-            cell.expiredLabel.hidden = !expiredOrNot[indexPath.section]
-            cell.expiredLabel.textColor = UIColor.redColor()
+            cell.expiredLabel.isHidden = !expiredOrNot[(indexPath as NSIndexPath).section]
+            cell.expiredLabel.textColor = UIColor.red
             cell.expiredLabel.text = "Expired"
             cell.expiredLabel.font = UIFont(name: (cell.expiredLabel?.font?.fontName)!, size: 40)
         
@@ -147,15 +147,15 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if resultSearchController.active {
-            resultSearchController.dismissViewControllerAnimated(true, completion: nil)
-            resultSearchController.active = false
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("EventDetailViewController") as! EventDetailViewController
+        if resultSearchController.isActive {
+            resultSearchController.dismiss(animated: true, completion: nil)
+            resultSearchController.isActive = false
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "EventDetailViewController") as! EventDetailViewController
             if self.allEventList.count > 0 {
             for i in 0...allEventList.count - 1 {
-                if filteredResults[indexPath.row] == allEventList[i].title {
+                if filteredResults[(indexPath as NSIndexPath).row] == allEventList[i].title {
                     let site = allEventList[i].site
                     let id = allEventList[i].id
 
@@ -167,33 +167,33 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     controller.isExpired = expiredOrNot[i]
                 }
                 }
-                self.presentViewController(controller, animated: true, completion: nil)
+                self.present(controller, animated: true, completion: nil)
             }
         }else {
         
             if allEventList.count > 0 {
-        let site = allEventList[indexPath.section].site
-        let id = allEventList[indexPath.section].id
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("EventDetailViewController") as! EventDetailViewController
-        controller.eventDetail = self.allEventList[indexPath.section]
+        let site = allEventList[(indexPath as NSIndexPath).section].site
+        let id = allEventList[(indexPath as NSIndexPath).section].id
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "EventDetailViewController") as! EventDetailViewController
+        controller.eventDetail = self.allEventList[(indexPath as NSIndexPath).section]
         controller.eventSite = site
         controller.eventID = id
-        controller.times = sectionTime[indexPath.section][indexPath.row]
-        controller.isExpired = expiredOrNot[indexPath.section]
-        controller.isExpected = whetherOrNot[indexPath.section]
-        self.presentViewController(controller, animated: true, completion: nil)
+        controller.times = sectionTime[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        controller.isExpired = expiredOrNot[(indexPath as NSIndexPath).section]
+        controller.isExpected = whetherOrNot[(indexPath as NSIndexPath).section]
+        self.present(controller, animated: true, completion: nil)
         }
         }
     }
     
     func getEventData(){
-        tableView.hidden = true
+        tableView.isHidden = true
         indicator.startAnimating()
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("events.json", parameters: [:]){(result, error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                if let data = result["data"] as? [[String:AnyObject]] {
+                if let data = result?["data"] as? [[String:AnyObject]] {
                     for item in data {
                         self.allEventList.append(AllEvent(dictionary: item))
                     }
@@ -236,16 +236,16 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     
                     self.rangeToRemove()
                 self.tableView.reloadData()
-                    self.indicator.hidden = true
+                    self.indicator.isHidden = true
                     self.indicator.stopAnimating()
-                    self.tableView.hidden = false
+                    self.tableView.isHidden = false
                 }
             }else {
-                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .Alert)
-                let OkayAction = UIAlertAction(title: "Okay", style: .Default, handler: nil)
+                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .alert)
+                let OkayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
                 alertController.addAction(OkayAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
-                self.indicator.hidden = true
+                self.present(alertController, animated: true, completion: nil)
+                self.indicator.isHidden = true
                 self.indicator.stopAnimating()
             }
         }
@@ -254,6 +254,7 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     //mark: expire events removal
     func rangeToRemove() {
+        print(allEventList[0])
         var rangeToRemove: Int! = 0
         
         if self.expiredOrNot.count > 0 {
@@ -274,14 +275,20 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         print(self.whetherOrNot.count, self.sectionName.count, self.expiredOrNot.count)
         
-        if self.allEventList.count > 0 {
-            for i in 0...self.allEventList.count - 1 {
-                if self.expectedList.count > 0 {
+        if self.allEventList.count > 0 && self.expectedList.count > 0 {
+            for i in 0...self.allEventList.count - 1  {
                     for d in 0...self.expectedList.count - 1 {
-                        if self.allEventList[i].id == self.expectedList[d].id {
+                        
+                        if Int(allEventList[i].id) == Int(expectedList[d].id){
                             self.whetherOrNot[i] = true
                         }
-                    }
+                        
+                        
+                        
+//                        if self.allEventList[i].id == self.expectedList[d].id {
+//                            self.whetherOrNot[i] = true
+//                        }
+                
                 }
             }
         }
@@ -289,27 +296,26 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
 
-
-    func expireCheck(theTime: String) -> Bool {
+    func expireCheck(_ theTime: String) -> Bool {
         
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
-        dateFormatter.dateFromString(theTime)
-        let theDate = dateFormatter.dateFromString(theTime)
-        let calendar = NSCalendar.currentCalendar()
-        let components1 = calendar.components([.Day, .Month, .Year], fromDate: theDate!)
+        dateFormatter.date(from: theTime)
+        let theDate = dateFormatter.date(from: theTime)
+        let calendar = Calendar.current
+        let components1 = (calendar as NSCalendar).components([.day, .month, .year], from: theDate!)
         let yearEvent = components1.year
         let monthEvent = components1.month
         let dayEvent = components1.day
         
-        let date = NSDate()
-        let components = calendar.components([.Day, .Month, .Year], fromDate: date)
+        let date = Date()
+        let components = (calendar as NSCalendar).components([.day, .month, .year], from: date)
         let yearNow = components.year
         let monthNow = components.month
         let dayNow = components.day
         
-        if yearNow > yearEvent || (yearNow == yearEvent && monthNow > monthEvent) || (yearNow == yearEvent && monthNow == monthEvent && dayNow > dayEvent){
+        if yearNow! > yearEvent! || (yearNow! == yearEvent! && monthNow! > monthEvent!) || (yearNow! == yearEvent! && monthNow! == monthEvent! && dayNow! > dayEvent!){
             
             return true
         }else {

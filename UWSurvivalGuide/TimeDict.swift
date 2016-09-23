@@ -24,19 +24,19 @@ class Time: NSObject, NSCoding {
         hour = dictionary["hour"] as? Int
     }
     
-    func encodeWithCoder(archiver: NSCoder) {
-        archiver.encodeObject(year, forKey: "year")
-        archiver.encodeObject(month, forKey: "month")
-        archiver.encodeObject(day, forKey: "day")
-        archiver.encodeObject(hour, forKey: "hour")
+    func encode(with archiver: NSCoder) {
+        archiver.encode(year, forKey: "year")
+        archiver.encode(month, forKey: "month")
+        archiver.encode(day, forKey: "day")
+        archiver.encode(hour, forKey: "hour")
     }
     
     required init(coder unarchiver: NSCoder) {
         super.init()
-        year = unarchiver.decodeObjectForKey("year") as? Int
-        month = unarchiver.decodeObjectForKey("month") as? Int
-        day = unarchiver.decodeObjectForKey("day") as? Int
-        hour = unarchiver.decodeObjectForKey("hour") as? Int
+        year = unarchiver.decodeObject(forKey: "year") as? Int
+        month = unarchiver.decodeObject(forKey: "month") as? Int
+        day = unarchiver.decodeObject(forKey: "day") as? Int
+        hour = unarchiver.decodeObject(forKey: "hour") as? Int
     }
     
     

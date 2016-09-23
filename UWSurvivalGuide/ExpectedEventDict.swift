@@ -21,23 +21,23 @@ class ExpectedEvent: NSManagedObject {
     @NSManaged var isExpired: NSNumber!
 
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
     
     init(dictionary: [String:AnyObject], context: NSManagedObjectContext){
         
-        let entity =  NSEntityDescription.entityForName("ExpectedEvent", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity =  NSEntityDescription.entity(forEntityName: "ExpectedEvent", in: context)!
+        super.init(entity: entity, insertInto: context)
         
-        id = dictionary["id"] as? Int
+        id = dictionary["id"] as? Int as NSNumber!
         site = dictionary["site"] as? String
         site_name = dictionary["site_name"] as? String
         link = dictionary["link"] as? String
         times = dictionary["times"] as? String
         title = dictionary["title"] as? String
         type = dictionary["type"] as? String
-        isExpired = dictionary["isExpired"] as? Bool
+        isExpired = dictionary["isExpired"] as? Bool as NSNumber!
 
     }
  

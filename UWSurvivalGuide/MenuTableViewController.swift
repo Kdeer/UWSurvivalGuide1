@@ -37,23 +37,23 @@ class MenuTableViewController: UIViewController, UITableViewDelegate,UITableView
 
     }
     
-    @IBAction func weekButton(sender: AnyObject) {
+    @IBAction func weekButton(_ sender: AnyObject) {
 
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         
         
         return newWeek[section]
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         
         return self.newWeek.count
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         self.tableView.reloadData()
@@ -64,26 +64,26 @@ class MenuTableViewController: UIViewController, UITableViewDelegate,UITableView
         self.automaticallyAdjustsScrollViewInsets = false
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.weekMenu[section].count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("menuCell", forIndexPath: indexPath) as UITableViewCell!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "menuCell", for: indexPath) as UITableViewCell!
         
-        let productName = self.weekMenu[indexPath.section][indexPath.row].product_name
-        cell.textLabel?.text = productName
+        let productName = self.weekMenu[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row].product_name
+        cell?.textLabel?.text = productName
         
-        return cell
+        return cell!
     }
     
     func detectTheMeal(){
-        if whichMeal?.rangeOfString("Lunch") != nil{
+        if whichMeal?.range(of: "Lunch") != nil{
             whichMeal = "lunch"
-        }else if whichMeal?.rangeOfString("Dinner") != nil {
+        }else if whichMeal?.range(of: "Dinner") != nil {
             whichMeal = "dinner"
-        }else if whichMeal?.rangeOfString("Breakfast") != nil {
+        }else if whichMeal?.range(of: "Breakfast") != nil {
             whichMeal = "breakfast"
         }
     }
@@ -98,7 +98,7 @@ class MenuTableViewController: UIViewController, UITableViewDelegate,UITableView
             }else {
                 performUIUpdatesOnMain(){
             //It starts with "data" first
-                if let menuData = result["data"] as? [String:AnyObject]{
+                if let menuData = result?["data"] as? [String:AnyObject]{
                 //under the "data", we have "outlets" and "date"
                     if let date = menuData["date"] as? [String:AnyObject]{
                         let startDate = date["start"] as? String

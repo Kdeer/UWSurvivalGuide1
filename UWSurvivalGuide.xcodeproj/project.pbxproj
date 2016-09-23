@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1411D2771D301855001D0843 /* MonitorParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1411D2761D301855001D0843 /* MonitorParking.swift */; };
-		1411D2B61D303CCB001D0843 /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1411D2B51D303CCB001D0843 /* KDCircularProgress.swift */; };
 		1418BA2C1D32B5C2002FB439 /* MeterParkingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1418BA2B1D32B5C2002FB439 /* MeterParkingTableViewCell.swift */; };
 		1418BA2E1D32E3F3002FB439 /* PermitParkingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1418BA2D1D32E3F3002FB439 /* PermitParkingTableViewController.swift */; };
 		1418BA301D32E4B6002FB439 /* PermitParkingDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1418BA2F1D32E4B6002FB439 /* PermitParkingDict.swift */; };
@@ -43,6 +42,12 @@
 		148AEBAC1D3AA1EF0082F665 /* AllEventDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AEBAB1D3AA1EF0082F665 /* AllEventDict.swift */; };
 		148AEBAE1D3ACB930082F665 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AEBAD1D3ACB930082F665 /* EventTableViewCell.swift */; };
 		148AEBB01D3B38BA0082F665 /* EventDetailDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AEBAF1D3B38BA0082F665 /* EventDetailDict.swift */; };
+		149090161D9594770020629A /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149090151D9594770020629A /* KDCircularProgress.swift */; };
+		1490901A1D9597460020629A /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149090191D9597460020629A /* Kanna.swift */; };
+		1490901C1D95975F0020629A /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490901B1D95975F0020629A /* libxmlHTMLDocument.swift */; };
+		1490901E1D9597770020629A /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490901D1D9597770020629A /* libxmlHTMLNode.swift */; };
+		149090211D95B4490020629A /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149090201D95B4490020629A /* TestViewController.swift */; };
+		149090231D95C9DD0020629A /* TestViewController1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149090221D95C9DD0020629A /* TestViewController1.swift */; };
 		14954EEB1D4AACE2002304DB /* TimeDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14954EEA1D4AACE2002304DB /* TimeDict.swift */; };
 		149833831D36DF5C00267E18 /* CustomPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149833821D36DF5C00267E18 /* CustomPointAnnotation.swift */; };
 		149833851D37149400267E18 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149833841D37149400267E18 /* CoreDataStackManager.swift */; };
@@ -57,10 +62,7 @@
 		14BF3D4B1D27548A002C73F6 /* UWSurvivalGuideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BF3D4A1D27548A002C73F6 /* UWSurvivalGuideTests.swift */; };
 		14BF3D561D27548A002C73F6 /* UWSurvivalGuideUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BF3D551D27548A002C73F6 /* UWSurvivalGuideUITests.swift */; };
 		14D3263F1D487ED900DF3346 /* CSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D3263A1D487ED900DF3346 /* CSS.swift */; };
-		14D326411D487ED900DF3346 /* libxmlHTMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D3263C1D487ED900DF3346 /* libxmlHTMLDocument.swift */; };
-		14D326421D487ED900DF3346 /* libxmlHTMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D3263D1D487ED900DF3346 /* libxmlHTMLNode.swift */; };
 		14D326431D487ED900DF3346 /* libxmlParserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D3263E1D487ED900DF3346 /* libxmlParserOption.swift */; };
-		14D326491D48862A00DF3346 /* Kanna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D326481D48862A00DF3346 /* Kanna.swift */; };
 		14D3A3A01D2B438B007CEDD7 /* LocationDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D3A39F1D2B438B007CEDD7 /* LocationDict.swift */; };
 		14D3A3A21D2B505F007CEDD7 /* FoodLocationMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D3A3A11D2B505F007CEDD7 /* FoodLocationMapViewController.swift */; };
 		14D91EF31D46A78A00325C3C /* NewsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D91EF21D46A78A00325C3C /* NewsDetailViewController.swift */; };
@@ -88,7 +90,6 @@
 
 /* Begin PBXFileReference section */
 		1411D2761D301855001D0843 /* MonitorParking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonitorParking.swift; sourceTree = "<group>"; };
-		1411D2B51D303CCB001D0843 /* KDCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KDCircularProgress.swift; sourceTree = "<group>"; };
 		1418BA2B1D32B5C2002FB439 /* MeterParkingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeterParkingTableViewCell.swift; sourceTree = "<group>"; };
 		1418BA2D1D32E3F3002FB439 /* PermitParkingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitParkingTableViewController.swift; sourceTree = "<group>"; };
 		1418BA2F1D32E4B6002FB439 /* PermitParkingDict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitParkingDict.swift; sourceTree = "<group>"; };
@@ -123,6 +124,13 @@
 		148AEBAB1D3AA1EF0082F665 /* AllEventDict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllEventDict.swift; sourceTree = "<group>"; };
 		148AEBAD1D3ACB930082F665 /* EventTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
 		148AEBAF1D3B38BA0082F665 /* EventDetailDict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailDict.swift; sourceTree = "<group>"; };
+		149090151D9594770020629A /* KDCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KDCircularProgress.swift; sourceTree = "<group>"; };
+		149090171D9594F60020629A /* KDCircularProgress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KDCircularProgress.h; sourceTree = "<group>"; };
+		149090191D9597460020629A /* Kanna.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Kanna.swift; sourceTree = "<group>"; };
+		1490901B1D95975F0020629A /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = libxmlHTMLDocument.swift; sourceTree = "<group>"; };
+		1490901D1D9597770020629A /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = libxmlHTMLNode.swift; sourceTree = "<group>"; };
+		149090201D95B4490020629A /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		149090221D95C9DD0020629A /* TestViewController1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController1.swift; sourceTree = "<group>"; };
 		14954EEA1D4AACE2002304DB /* TimeDict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeDict.swift; sourceTree = "<group>"; };
 		149833821D36DF5C00267E18 /* CustomPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotation.swift; sourceTree = "<group>"; };
 		149833841D37149400267E18 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
@@ -143,11 +151,8 @@
 		14BF3D551D27548A002C73F6 /* UWSurvivalGuideUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UWSurvivalGuideUITests.swift; sourceTree = "<group>"; };
 		14BF3D571D27548A002C73F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14D3263A1D487ED900DF3346 /* CSS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSS.swift; sourceTree = "<group>"; };
-		14D3263C1D487ED900DF3346 /* libxmlHTMLDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = libxmlHTMLDocument.swift; sourceTree = "<group>"; };
-		14D3263D1D487ED900DF3346 /* libxmlHTMLNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = libxmlHTMLNode.swift; sourceTree = "<group>"; };
 		14D3263E1D487ED900DF3346 /* libxmlParserOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = libxmlParserOption.swift; sourceTree = "<group>"; };
 		14D326471D48805D00DF3346 /* [Modulename]-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "[Modulename]-Bridging-Header.h"; sourceTree = "<group>"; };
-		14D326481D48862A00DF3346 /* Kanna.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Kanna.swift; sourceTree = "<group>"; };
 		14D3A39F1D2B438B007CEDD7 /* LocationDict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDict.swift; sourceTree = "<group>"; };
 		14D3A3A11D2B505F007CEDD7 /* FoodLocationMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodLocationMapViewController.swift; sourceTree = "<group>"; };
 		14D91EF21D46A78A00325C3C /* NewsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailViewController.swift; sourceTree = "<group>"; };
@@ -227,14 +232,15 @@
 			isa = PBXGroup;
 			children = (
 				14D3263A1D487ED900DF3346 /* CSS.swift */,
-				14D326481D48862A00DF3346 /* Kanna.swift */,
-				14D3263C1D487ED900DF3346 /* libxmlHTMLDocument.swift */,
-				14D3263D1D487ED900DF3346 /* libxmlHTMLNode.swift */,
+				149090191D9597460020629A /* Kanna.swift */,
+				1490901B1D95975F0020629A /* libxmlHTMLDocument.swift */,
 				14D3263E1D487ED900DF3346 /* libxmlParserOption.swift */,
+				1490901D1D9597770020629A /* libxmlHTMLNode.swift */,
 				14D326471D48805D00DF3346 /* [Modulename]-Bridging-Header.h */,
 				149833841D37149400267E18 /* CoreDataStackManager.swift */,
 				149833861D3714AD00267E18 /* Model.xcdatamodeld */,
-				1411D2B51D303CCB001D0843 /* KDCircularProgress.swift */,
+				149090171D9594F60020629A /* KDCircularProgress.h */,
+				149090151D9594770020629A /* KDCircularProgress.swift */,
 				146B7F211D28A7F9009E86DA /* GCDBlackBox.swift */,
 				14D91EF81D46D9C700325C3C /* ImageCache.swift */,
 			);
@@ -299,6 +305,15 @@
 			name = EventClient;
 			sourceTree = "<group>";
 		};
+		1490901F1D95B42D0020629A /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				149090201D95B4490020629A /* TestViewController.swift */,
+				149090221D95C9DD0020629A /* TestViewController1.swift */,
+			);
+			name = Test;
+			sourceTree = "<group>";
+		};
 		14BF3D291D27548A002C73F6 = {
 			isa = PBXGroup;
 			children = (
@@ -322,6 +337,7 @@
 		14BF3D341D27548A002C73F6 /* UWSurvivalGuide */ = {
 			isa = PBXGroup;
 			children = (
+				1490901F1D95B42D0020629A /* Test */,
 				1411D2B71D303CE0001D0843 /* AnimationAndSo */,
 				14BF3D391D27548A002C73F6 /* Main.storyboard */,
 				14BF3D351D27548A002C73F6 /* AppDelegate.swift */,
@@ -430,21 +446,24 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Xiaochao Luo";
 				TargetAttributes = {
 					14BF3D311D27548A002C73F6 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 3KEDNP64AW;
+						LastSwiftMigration = 0800;
 					};
 					14BF3D451D27548A002C73F6 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 3KEDNP64AW;
+						LastSwiftMigration = 0800;
 						TestTargetID = 14BF3D311D27548A002C73F6;
 					};
 					14BF3D501D27548A002C73F6 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 3KEDNP64AW;
+						LastSwiftMigration = 0800;
 						TestTargetID = 14BF3D311D27548A002C73F6;
 					};
 				};
@@ -520,14 +539,13 @@
 				149833881D3714AD00267E18 /* Model.xcdatamodeld in Sources */,
 				1418BA3A1D3300DE002FB439 /* BuildingParkingViewController.swift in Sources */,
 				1428B2441D3878A1003069CC /* EXMapParkingLocation.swift in Sources */,
-				1411D2B61D303CCB001D0843 /* KDCircularProgress.swift in Sources */,
-				14D326491D48862A00DF3346 /* Kanna.swift in Sources */,
 				149833851D37149400267E18 /* CoreDataStackManager.swift in Sources */,
 				1418BA341D32F1EA002FB439 /* VisitorParkingTableViewController.swift in Sources */,
-				14D326411D487ED900DF3346 /* libxmlHTMLDocument.swift in Sources */,
+				1490901A1D9597460020629A /* Kanna.swift in Sources */,
 				1428B2461D38812B003069CC /* WatParkingViewCollectionController.swift in Sources */,
 				147556981D31876100F33611 /* MeterParkingTableViewController.swift in Sources */,
 				1411D2771D301855001D0843 /* MonitorParking.swift in Sources */,
+				149090161D9594770020629A /* KDCircularProgress.swift in Sources */,
 				14D91EF31D46A78A00325C3C /* NewsDetailViewController.swift in Sources */,
 				1488ABAF1D2E1ADE008D8139 /* EXFoodOutletTableViewController.swift in Sources */,
 				14E9CDD61D398E7F00240B7B /* EventViewController.swift in Sources */,
@@ -535,8 +553,9 @@
 				146B7F191D285CC3009E86DA /* UWSGFoodClientModel.swift in Sources */,
 				14D91EF71D46B4FD00325C3C /* EXNewsViewController.swift in Sources */,
 				1488ABAB1D2DAE73008D8139 /* FoodOutletsTableViewCell.swift in Sources */,
+				1490901C1D95975F0020629A /* libxmlHTMLDocument.swift in Sources */,
 				14ADD95F1D3F0E2D006B71F6 /* ExpectedEventViewController.swift in Sources */,
-				14D326421D487ED900DF3346 /* libxmlHTMLNode.swift in Sources */,
+				149090231D95C9DD0020629A /* TestViewController1.swift in Sources */,
 				144670B61D455CB90076A5C9 /* NewsDict.swift in Sources */,
 				1488ABA21D2D609F008D8139 /* OpenningHoursDict.swift in Sources */,
 				1418BA361D32F30A002FB439 /* VisitorParkingDict.swift in Sources */,
@@ -544,6 +563,8 @@
 				141B2A381D49562900E5F38A /* NewsDetailViewController1.swift in Sources */,
 				14D3A3A21D2B505F007CEDD7 /* FoodLocationMapViewController.swift in Sources */,
 				14D3A3A01D2B438B007CEDD7 /* LocationDict.swift in Sources */,
+				149090211D95B4490020629A /* TestViewController.swift in Sources */,
+				1490901E1D9597770020629A /* libxmlHTMLNode.swift in Sources */,
 				14BF3D361D27548A002C73F6 /* AppDelegate.swift in Sources */,
 				14D3263F1D487ED900DF3346 /* CSS.swift in Sources */,
 				143D3D161D29694600E3A0E6 /* FoodOutletTableViewCell.swift in Sources */,
@@ -624,8 +645,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -669,8 +692,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -689,6 +714,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -707,6 +733,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "[Modulename]-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "[Modulename]-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -723,6 +750,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "[Modulename]-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "[Modulename]-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -734,6 +762,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LX.UWSurvivalGuideTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UWSurvivalGuide.app/UWSurvivalGuide";
 			};
 			name = Debug;
@@ -746,6 +775,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LX.UWSurvivalGuideTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UWSurvivalGuide.app/UWSurvivalGuide";
 			};
 			name = Release;
@@ -757,6 +787,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LX.UWSurvivalGuideUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = UWSurvivalGuide;
 			};
 			name = Debug;
@@ -768,6 +799,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LX.UWSurvivalGuideUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = UWSurvivalGuide;
 			};
 			name = Release;

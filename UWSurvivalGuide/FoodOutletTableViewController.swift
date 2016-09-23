@@ -58,7 +58,7 @@ class FoodOutletTableViewController: UIViewController, UITableViewDelegate,UITab
         
     }
     
-    func scheduleDecipher(daySchedule:LocationDict!,day:[String]){
+    func scheduleDecipher(_ daySchedule:LocationDict!,day:[String]){
         
         let openTime = "opening_hour"
         let closeTime = "closing_hour"
@@ -78,7 +78,7 @@ class FoodOutletTableViewController: UIViewController, UITableViewDelegate,UITab
         
     }
     
-    func OpenTimeFormat(string1: String, string2: String, string3: String) -> String {
+    func OpenTimeFormat(_ string1: String, string2: String, string3: String) -> String {
         
         let ultiString = string1 + ":" + "   " + string2 + " " + "-" + " " + string3
         return ultiString
@@ -97,54 +97,54 @@ class FoodOutletTableViewController: UIViewController, UITableViewDelegate,UITab
         tableView.reloadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         weekOpeningHour?.removeAll()
         self.weekMenu = []
         self.newWeek = []
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.section[section]
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.section.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.arrayForSection[section].count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("foodOutletTableCell", forIndexPath: indexPath) as! FoodOutletTableViewCell
-        let sectionContent = arrayForSection[indexPath.section][indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "foodOutletTableCell", for: indexPath) as! FoodOutletTableViewCell
+        let sectionContent = arrayForSection[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
         cell.informationLabel.text = sectionContent
         if cell.informationLabel.text == locationInfo1.building {
-            cell.directionButton.hidden = false
+            cell.directionButton.isHidden = false
         }else {
-            cell.directionButton.hidden = true
+            cell.directionButton.isHidden = true
         }
         
-        if cell.directionButton.hidden == false {
-            cell.directionButton.addTarget(self, action: #selector(self.goForDirection(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        if cell.directionButton.isHidden == false {
+            cell.directionButton.addTarget(self, action: #selector(self.goForDirection(_:)), for: UIControlEvents.touchUpInside)
         }
 //        cell.textLabel?.text = sectionContent
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! FoodOutletTableViewCell
+        let cell = tableView.cellForRow(at: indexPath) as! FoodOutletTableViewCell
         if cell.informationLabel.text == locationInfo1.building{
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("FoodLocationMapViewController") as! FoodLocationMapViewController
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "FoodLocationMapViewController") as! FoodLocationMapViewController
             controller.latitude = locationInfo1.latitude
             controller.longitude = locationInfo1.longitude
             controller.outletsTitle = locationInfo1.building
             self.navigationController!.pushViewController(controller, animated: true)
         }
         
-        if cell.informationLabel.text?.rangeOfString("Service")?.isEmpty == false {
+        if cell.informationLabel.text?.range(of: "Service")?.isEmpty == false {
             self.whichMeal = cell.informationLabel.text
             detectTheMeal()
             findTheMenu()
@@ -153,15 +153,15 @@ class FoodOutletTableViewController: UIViewController, UITableViewDelegate,UITab
         }
     }
 
-    func goForDirection(sender: UIButton){
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("FoodLocationMapViewController") as! FoodLocationMapViewController
+    func goForDirection(_ sender: UIButton){
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "FoodLocationMapViewController") as! FoodLocationMapViewController
         controller.latitude = locationInfo1.latitude
         controller.longitude = locationInfo1.longitude
         controller.outletsTitle = locationInfo1.building
         self.navigationController!.pushViewController(controller, animated: true)
     }
     
-    @IBAction func GoForLocation(sender: AnyObject) {
+    @IBAction func GoForLocation(_ sender: AnyObject) {
 
     }
     
@@ -176,7 +176,7 @@ class FoodOutletTableViewController: UIViewController, UITableViewDelegate,UITab
             }else {
                 performUIUpdatesOnMain(){
                     print(result)
-                    if let data = result["data"] as? [[String:AnyObject]] {
+                    if let data = result?["data"] as? [[String:AnyObject]] {
                         for item in data {
                             self.locationInfo.append(LocationDict(dictionary: item))
                         }

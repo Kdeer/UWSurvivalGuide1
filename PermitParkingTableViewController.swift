@@ -28,7 +28,7 @@ class PermitParkingTableViewController: UIViewController, UITableViewDelegate, U
         
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
-        refreshControl.addTarget(self, action: #selector(PermitParkingTableViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(PermitParkingTableViewController.refresh), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         self.automaticallyAdjustsScrollViewInsets = false
         tableView.delegate = self
@@ -41,7 +41,7 @@ class PermitParkingTableViewController: UIViewController, UITableViewDelegate, U
     func refresh(){
         if permitParkingList.count > 0 {
             for i in 0...permitParkingList.count - 1 {
-                sharedContext.deleteObject(permitParkingList[i])
+                sharedContext.delete(permitParkingList[i])
                 
             }
             sectionName.removeAll()
@@ -71,57 +71,56 @@ class PermitParkingTableViewController: UIViewController, UITableViewDelegate, U
     
     
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.sectionName[section]
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.sectionName.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.sectionInfos[section].count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! MeterParkingTableViewCell
-        cell.parkingLotLabel.text = sectionInfos[indexPath.section][indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MeterParkingTableViewCell
+        cell.parkingLotLabel.text = sectionInfos[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ParkingLocationViewController") as! ParkingLocationViewController
-        controller.permitParking = self.permitParkingList[indexPath.section]
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ParkingLocationViewController") as! ParkingLocationViewController
+        controller.permitParking = self.permitParkingList[(indexPath as NSIndexPath).section]
 //        self.navigationController!.pushViewController(controller, animated: true)
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
 
     }
     
-    @IBAction func MapVersionButton(sender: AnyObject) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapParkingLocationViewController") as! MapParkingLocationViewController
+    @IBAction func MapVersionButton(_ sender: AnyObject) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MapParkingLocationViewController") as! MapParkingLocationViewController
         controller.permitParkingList = self.permitParkingList
         controller.initParkingIndicator = "Permit"
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
     }
     
-    @IBAction func dismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
     func getPermitParking(){
-        mapParkingButton.enabled = false
+        mapParkingButton.isEnabled = false
         if permitParkingList.isEmpty == true {
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/lots/permit.json", parameters: [:]){(result,error) in
             
             if error == nil{
                 performUIUpdatesOnMain(){
-                if let data = result["data"] as? [[String:AnyObject]]{
+                if let data = result?["data"] as? [[String:AnyObject]]{
                     let permitParking = data.map() {(dictionary: [String:AnyObject]) -> PermitParking in
-                        let permitParking = PermitParking(dictionary: dictionary, context: sharedContext)
-                        return permitParking
+                        PermitParking(dictionary: dictionary, context: sharedContext)
                     }
                     self.permitParkingList = permitParking
                     for i in 0...permitParking.count-1 {
@@ -132,7 +131,7 @@ class PermitParkingTableViewController: UIViewController, UITableViewDelegate, U
                     print(self.sectionName)
                     saveContext()
                     self.tableView.reloadData()
-                    self.mapParkingButton.enabled = true
+                    self.mapParkingButton.isEnabled = true
                 }
                 }
             }

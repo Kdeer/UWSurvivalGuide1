@@ -37,25 +37,25 @@ extension MapParkingLocationViewController{
         
     }
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView{
             self.rightCallout(view.annotation!.coordinate.latitude, longitude: view.annotation!.coordinate.longitude)
         }
     }
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    @objc(mapView:viewForAnnotation:) func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         if !(annotation is CustomPointAnnotation){
             return nil
         }
         let reuseId = "pin"
         
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId)
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
         
         let RunImage = UIImage(named: "direction")
-        let RunButton = UIButton(type: .Custom)
-        RunButton.frame = CGRectMake(0, 0, 27, 27)
-        RunButton.setImage(RunImage, forState: .Normal)
+        let RunButton = UIButton(type: .custom)
+        RunButton.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
+        RunButton.setImage(RunImage, for: UIControlState())
         
         if pinView == nil {
             pinView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
@@ -73,7 +73,7 @@ extension MapParkingLocationViewController{
         return pinView
     }
     
-    func rightCallout(latitude: Double, longitude: Double){
+    func rightCallout(_ latitude: Double, longitude: Double){
         CLGeocoder().reverseGeocodeLocation(CLLocation(latitude:latitude, longitude: longitude), completionHandler: {(placemarks, error) -> Void in
             
             if placemarks!.count > 0 {
@@ -81,7 +81,7 @@ extension MapParkingLocationViewController{
                 if let selectedPin = self.placemark{
                     let mapItem = MKMapItem(placemark: selectedPin)
                     let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-                    mapItem.openInMapsWithLaunchOptions(launchOptions)
+                    mapItem.openInMaps(launchOptions: launchOptions)
                 }
             }
         })

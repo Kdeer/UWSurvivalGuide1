@@ -23,7 +23,7 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var indicator: UIActivityIndicatorView!
     
     
-    var taskToCancelifCellIsReused: NSURLSessionTask? {
+    var taskToCancelifCellIsReused: URLSessionTask? {
         
         didSet {
             if let taskToCancel = oldValue {

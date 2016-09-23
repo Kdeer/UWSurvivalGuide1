@@ -12,53 +12,54 @@ import UIKit
 
 class UWSGFoodClientModel: NSObject {
     
-    func taskForImage(imageURL: String, completionHandler: (imageData: NSData?, error: NSError?)->Void) -> NSURLSessionTask{
-        let url = NSURL(string: imageURL)
+    func taskForImage(_ imageURL: String, completionHandler: @escaping (_ imageData: Data?, _ error: NSError?)->Void) -> URLSessionTask{
+        let url = URL(string: imageURL)
 
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession.sharedSession()
+        let request = URLRequest(url: url!)
+        let session = URLSession.shared
         
-        let task = session.dataTaskWithRequest(request) {(data, response, error) in
+        let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             
 //            print(data)
 //            print(response)
             if error != nil {
                // print("Some error is here")
-                completionHandler(imageData: nil, error: error)
+                completionHandler(nil, error as NSError?)
             } else if data == nil{
               //  print("We didn't get the data")
-                completionHandler(imageData: nil, error: nil)
+                completionHandler(nil, nil)
             }else {
                // print("We get the data")
-                completionHandler(imageData: data, error: nil)
+                completionHandler(data, nil)
             }
-        }
+        }) 
         
         task.resume()
         return task
     }
     
-    func taskForGetMethod(method: String, parameters: [String:AnyObject], completionHandlerForGet: (result:AnyObject!, error: NSError?)-> Void) -> NSURLSessionDataTask {
+   @discardableResult func taskForGetMethod(_ method: String, parameters: [String:AnyObject], completionHandlerForGet:  @escaping (_ result:AnyObject?, _ error: NSError?)-> Void) -> URLSessionDataTask {
         
         var parameters = parameters
         
         parameters = [
-        "key" : "d13ee19474e6baa9328907c41a2fd77a",
-        "callback" : "0"
+        "key" : "d13ee19474e6baa9328907c41a2fd77a" as AnyObject,
+        "callback" : "0" as AnyObject
         ]
     
-        let session = NSURLSession.sharedSession()
+    print("We are doing your job")
+        let session = URLSession.shared
         let url = UWFoodURLFromParameters(parameters, withExtension: method)
-        let request = NSMutableURLRequest(URL: url)
+        let request = URLRequest(url: url)
     
-        let task = session.dataTaskWithRequest(request){(data, response, error) in
+        let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             guard error == nil else{
-                completionHandlerForGet(result: nil, error: error)
+                completionHandlerForGet(nil, error as NSError?)
             print("there is an error")
             return
             }
             
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode , statusCode >= 200 && statusCode <= 299 else {
             print("your request returned a bad status code")
             return
             }
@@ -70,50 +71,52 @@ class UWSGFoodClientModel: NSObject {
             
             let parsedResults: AnyObject!
             do{
-                parsedResults = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)}catch{
+                parsedResults = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject!
+            }
+            catch{
                     print("cannot parse the data")
                     return
             }
-            completionHandlerForGet(result: parsedResults, error: nil)
-        }
+            completionHandlerForGet(parsedResults, nil)
+        })
     
         task.resume()
         return task
     }
     
 
-    func UWFoodURLFromParameters(parameters: [String:AnyObject], withExtension: String? = nil) -> NSURL {
+    func UWFoodURLFromParameters(_ parameters: [String:AnyObject], withExtension: String? = nil) -> URL {
         
-        let components = NSURLComponents()
+        var components = URLComponents()
         components.scheme = "https"
         components.host = "api.uwaterloo.ca"
         components.path = "/v2/" + (withExtension ?? "")
 //        "/v2/foodservices/outlets.json"
-        components.queryItems = [NSURLQueryItem]()
+        components.queryItems = [URLQueryItem]()
         
         for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
         
-        return components.URL!
+        return components.url!
     }
     
-    func UWEventURLFromParameters(parameters: [String:AnyObject], withExtension: String? = nil) -> NSURL {
+    func UWEventURLFromParameters(_ parameters: [String:AnyObject], withExtension: String? = nil) -> URL {
         
-        let components = NSURLComponents()
+        var components = URLComponents()
         components.scheme = "https"
         components.host = "api.uwaterloo.ca"
         components.path = (withExtension ?? "")
         //        "/v2/foodservices/outlets.json"
-        components.queryItems = [NSURLQueryItem]()
+        components.queryItems = [URLQueryItem]()
         
         for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
         
-        return components.URL!
+        return components.url!
     }
     
     class func sharedInstance() -> UWSGFoodClientModel {

@@ -26,45 +26,45 @@ class WatParkingViewCollectionController: UIViewController, UICollectionViewDele
         super.viewDidLoad()
         collectionView.delegate = self
         self.automaticallyAdjustsScrollViewInsets = false
-        collectionView.hidden = true
+        collectionView.isHidden = true
         
         loadData()
     }
     
     func loadData(){
-        indicator.hidden = false
+        indicator.isHidden = false
         indicator.startAnimating()
-        mapViewParking.enabled = false
+        mapViewParking.isEnabled = false
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/watpark.json", parameters: [:]){(result, error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                    if let meterParkingResult = result["data"] as? [[String:AnyObject]] {
+                    if let meterParkingResult = result?["data"] as? [[String:AnyObject]] {
                         for item in meterParkingResult{
                             self.MonitorParkingList.append(MonitorParking(dictionary: item))
                         }
                         print(self.MonitorParkingList)
                         self.collectionView!.reloadData()
                         self.indicator.stopAnimating()
-                        self.indicator.hidden = true
-                        self.collectionView.hidden = false
-                        self.mapViewParking.enabled = true
+                        self.indicator.isHidden = true
+                        self.collectionView.isHidden = false
+                        self.mapViewParking.isEnabled = true
                     }
                 }
             }else {
                 self.indicator.stopAnimating()
-                self.indicator.hidden = true
-                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .Alert)
-                let OkayAction = UIAlertAction(title: "Okay", style: .Default, handler: nil)
+                self.indicator.isHidden = true
+                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .alert)
+                let OkayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
                 alertController.addAction(OkayAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
+                self.present(alertController, animated: true, completion: nil)
                 print("wrong")
             }
             
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
         
         flowLayout.sectionInset = UIEdgeInsets(top: 30, left: 0, bottom: 30, right: 0)
         flowLayout.minimumInteritemSpacing = 1
@@ -72,44 +72,53 @@ class WatParkingViewCollectionController: UIViewController, UICollectionViewDele
         return CGSize(width: collectionView.frame.width/2.01, height: collectionView.frame.width/1.8)
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return MonitorParkingList.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! WatParkingCollectionViewCell
-        let parkingRow = MonitorParkingList[indexPath.row]
-        let percentNumber = Double(MonitorParkingList[indexPath.row].percent_filled)/100
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! WatParkingCollectionViewCell
+        let parkingRow = MonitorParkingList[(indexPath as NSIndexPath).row]
+        let percentNumber = Double(MonitorParkingList[(indexPath as NSIndexPath).row].percent_filled)/100
         cell.lotLabel.font = UIFont(name: "HelveticaNeue-CondensedBlack", size: 70)
         
         cell.lotLabel.text = parkingRow.lot_name
         cell.capacityLabel.text = String(parkingRow.current_count) + "/" + String(parkingRow.capacity)
-        cell.progressView.hidden = false
+        cell.progressView.isHidden = false
         cell.progressView.alpha = 1
-        cell.progressView.animateFromAngle(0, toAngle: 360*percentNumber, duration: 4*percentNumber){completed in
+        
+        cell.progressView.animate(fromAngle: 0, toAngle: 360*percentNumber, duration: 4*percentNumber, relativeDuration: true) { completed in
             if completed{
-                cell.percentageLabel.text = String(percentNumber) + "%"
+                cell.percentageLabel.text = String(percentNumber*100) + "%"
             }else {
                 print("animation stopeed, was interrupted")
             }
         }
         
+//        cell.progressView.animateFromAngle(0, toAngle: 360*percentNumber, duration: 4*percentNumber){completed in
+//            if completed{
+//                cell.percentageLabel.text = String(percentNumber) + "%"
+//            }else {
+//                print("animation stopeed, was interrupted")
+//            }
+//        }
+        
         return cell
     }
     
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        _ = collectionView.cellForItemAtIndexPath(indexPath) as! WatParkingCollectionViewCell
-        let parkingRow = MonitorParkingList[indexPath.row]
+        _ = collectionView.cellForItem(at: indexPath) as! WatParkingCollectionViewCell
+        let parkingRow = MonitorParkingList[(indexPath as NSIndexPath).row]
         
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ParkingLocationViewController") as! ParkingLocationViewController
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ParkingLocationViewController") as! ParkingLocationViewController
         controller.MonitoredSpot = parkingRow
 //        self.navigationController!.pushViewController(controller, animated: true)
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
-    @IBAction func refreshButtonPressed(sender: AnyObject) {
+    @IBAction func refreshButtonPressed(_ sender: AnyObject) {
         if MonitorParkingList.count > 0 {
             MonitorParkingList.removeAll()
             loadData()
@@ -121,17 +130,17 @@ class WatParkingViewCollectionController: UIViewController, UICollectionViewDele
     
     
     //change the view to the map with all the parking's lots.
-    @IBAction func MapVersionButton(sender: AnyObject) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapParkingLocationViewController") as! MapParkingLocationViewController
+    @IBAction func MapVersionButton(_ sender: AnyObject) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MapParkingLocationViewController") as! MapParkingLocationViewController
         controller.monitorParkingList = self.MonitorParkingList
         controller.initParkingIndicator = "Monitor"
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
     }
     
 
-    @IBAction func dismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     

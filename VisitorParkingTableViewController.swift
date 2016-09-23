@@ -28,11 +28,11 @@ class VisitorParkingTableViewController: UIViewController, UITableViewDelegate, 
         
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
-        refreshControl.addTarget(self, action: #selector(VisitorParkingTableViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(VisitorParkingTableViewController.refresh), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         self.automaticallyAdjustsScrollViewInsets = false
         tableView.delegate = self
-        tableView.scrollEnabled = true
+        tableView.isScrollEnabled = true
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 340
         
@@ -42,7 +42,7 @@ class VisitorParkingTableViewController: UIViewController, UITableViewDelegate, 
     func refresh(){
         if VisitorParkingList.count > 0 {
             for i in 0...VisitorParkingList.count - 1 {
-                sharedContext.deleteObject(VisitorParkingList[i])
+                sharedContext.delete(VisitorParkingList[i])
 
             }
             sectionName.removeAll()
@@ -74,46 +74,46 @@ class VisitorParkingTableViewController: UIViewController, UITableViewDelegate, 
     }
     
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Lot" + " " + sectionName[section]
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return sectionName.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sectionInfos[section].count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! MeterParkingTableViewCell
-        cell.visitorParkingLabel.text = sectionInfos[indexPath.section][indexPath.row]
-        cell.visitorParkingNote.text = "Note:" + " " + sectionNotes[indexPath.section][indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MeterParkingTableViewCell
+        cell.visitorParkingLabel.text = sectionInfos[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
+        cell.visitorParkingNote.text = "Note:" + " " + sectionNotes[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).row]
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ParkingLocationViewController") as! ParkingLocationViewController
-        print(VisitorParkingList[indexPath.row])
-        controller.visitorParking = self.VisitorParkingList[indexPath.section]
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ParkingLocationViewController") as! ParkingLocationViewController
+        print(VisitorParkingList[(indexPath as NSIndexPath).row])
+        controller.visitorParking = self.VisitorParkingList[(indexPath as NSIndexPath).section]
         
 //        self.navigationController!.pushViewController(controller, animated: true)
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
 
     }
     
-    @IBAction func MapVersionButton(sender: AnyObject) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapParkingLocationViewController") as! MapParkingLocationViewController
+    @IBAction func MapVersionButton(_ sender: AnyObject) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MapParkingLocationViewController") as! MapParkingLocationViewController
         controller.visitorParkingList = self.VisitorParkingList
         controller.initParkingIndicator = "Visitor"
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
     }
     
-    @IBAction func dismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
@@ -121,13 +121,13 @@ class VisitorParkingTableViewController: UIViewController, UITableViewDelegate, 
     
     
     func getVisitorParking(){
-        mapViewParking.enabled = false
+        mapViewParking.isEnabled = false
         if VisitorParkingList.isEmpty == true {
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/lots/visitor.json", parameters: [:]){(result, error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [[String:AnyObject]] {
+                    if let data = result?["data"] as? [[String:AnyObject]] {
                             let visitorParking = data.map() {(dictionary: [String:AnyObject]) -> VisitorParking in
                                 let visitorParking = VisitorParking(dictionary: dictionary, context: sharedContext)
                                 return visitorParking
@@ -141,7 +141,7 @@ class VisitorParkingTableViewController: UIViewController, UITableViewDelegate, 
                         saveContext()
                                 print(self.VisitorParkingList.count)
                         self.tableView.reloadData()
-                        self.mapViewParking.enabled = true
+                        self.mapViewParking.isEnabled = true
                     }
                 }
             }else {

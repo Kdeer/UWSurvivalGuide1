@@ -9,6 +9,17 @@
 import Foundation
 import UIKit
 import CoreData
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class EventDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -46,24 +57,24 @@ class EventDetailViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.estimatedRowHeight = 400
         
         if isExpected == true {
-            self.expectButton.tintColor = UIColor.yellowColor()
+            self.expectButton.tintColor = UIColor.yellow
 //            self.expectButton.enabled = false
         }else {
-            self.expectButton.enabled = true
+            self.expectButton.isEnabled = true
         }
         getEventDetail(eventSite, id: eventID)
         
        // self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell1", forIndexPath: indexPath) as! EventTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! EventTableViewCell
         
-        cell.expireLabel.hidden = !isExpired!
+        cell.expireLabel.isHidden = !isExpired!
         if EventTimeList.count == 1 {
         cell.eventTimeLabel.text = EventTimeList[0].start_date + " " + EventTimeList[0].start_day + " " + EventTimeList[0].start_time
         }else if EventTimeList.count > 1 {
@@ -72,14 +83,14 @@ class EventDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
         if self.descriptions == nil {
             cell.DescriptionLabel.text = "Null"
-            cell.DescriptionLabel.textAlignment = .Left
+            cell.DescriptionLabel.textAlignment = .left
         }else {
             cell.DescriptionLabel.text = self.descriptions
         }
         
         if self.audience.count > 0 {
         
-            audiences = self.audience.joinWithSeparator(", ")
+            audiences = self.audience.joined(separator: ", ")
             print(self.audiences)
             cell.audienceLabel.text = self.audiences
         }else {
@@ -95,9 +106,9 @@ class EventDetailViewController: UIViewController, UITableViewDelegate, UITableV
         if eventLocation != nil {
             cell.locationInfoLabel.text = locationString()
             if eventLocation!.latitude == nil {
-                cell.directionButton.hidden = true
+                cell.directionButton.isHidden = true
             }else {
-                cell.directionButton.addTarget(self, action: #selector(EventDetailViewController.getDirection(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+                cell.directionButton.addTarget(self, action: #selector(EventDetailViewController.getDirection(_:)), for: UIControlEvents.touchUpInside)
                 print("not nil")
             }
         }
@@ -135,66 +146,66 @@ class EventDetailViewController: UIViewController, UITableViewDelegate, UITableV
         return addressLine
     }
     
-    @IBAction func LinkButtonPressed(sender: AnyObject) {
+    @IBAction func LinkButtonPressed(_ sender: AnyObject) {
         
-        let app = UIApplication.sharedApplication()
+        let app = UIApplication.shared
         if self.link != nil {
-        app.openURL(NSURL(string: self.link!)!)
+        app.openURL(URL(string: self.link!)!)
         }else {
-            app.openURL(NSURL(string: self.eventDetail.link)!)
+            app.openURL(URL(string: self.eventDetail.link)!)
         }
     }
     
     
-    func getDirection(sender: UIButton){
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ParkingLocationViewController") as! ParkingLocationViewController
+    func getDirection(_ sender: UIButton){
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ParkingLocationViewController") as! ParkingLocationViewController
         controller.latitude = eventLocation!.latitude
         controller.longitude = eventLocation!.longitude
         if eventLocation!.name != nil {
         controller.titles = eventLocation!.name
         }
 
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
     }
     
-    @IBAction func DismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func DismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
 
-    @IBAction func ExpectedEventButtonPressed(sender: AnyObject) {
+    @IBAction func ExpectedEventButtonPressed(_ sender: AnyObject) {
         
         if isExpected == false {
         let dictionary: [String:AnyObject] = [
             
-            "id": self.eventDetail.id!,
-            "site": self.eventDetail.site!,
-            "site_name": self.eventDetail.site_name!,
-            "link": self.eventDetail.link!,
-            "times": self.times!,
-            "title": self.eventDetail.title!,
-            "type": self.eventDetail.type!,
-            "isExpired": self.isExpired!
+            "id": self.eventDetail.id! as AnyObject,
+            "site": self.eventDetail.site! as AnyObject,
+            "site_name": self.eventDetail.site_name! as AnyObject,
+            "link": self.eventDetail.link! as AnyObject,
+            "times": self.times! as AnyObject,
+            "title": self.eventDetail.title! as AnyObject,
+            "type": self.eventDetail.type! as AnyObject,
+            "isExpired": self.isExpired! as AnyObject
         ]
         
         let event = ExpectedEvent(dictionary: dictionary, context: sharedContext)
         expectedEventsList.append(event)
         saveContext()
             isExpected = true
-            self.expectButton.tintColor = UIColor.yellowColor()
+            self.expectButton.tintColor = UIColor.yellow
         }
     }
     
     
-    func getEventDetail(site: String, id: Int) {
+    func getEventDetail(_ site: String, id: Int) {
         
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("events/\(site)/\(id).json", parameters: [:]){(result, error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [String:AnyObject]{
+                    if let data = result?["data"] as? [String:AnyObject]{
                         let timeList = data["times"] as? [[String:AnyObject]]
                         
                         self.descriptions = data["description"] as? String
@@ -223,7 +234,7 @@ class EventDetailViewController: UIViewController, UITableViewDelegate, UITableV
                     self.eventNameLabel.text = self.titleString
                     } else {
                         self.eventNameLabel.text = "Title is too long for display"
-                        self.eventNameLabel.textColor = UIColor.blueColor()
+                        self.eventNameLabel.textColor = UIColor.blue
                     }
                     self.tableView.reloadData()
                 }
@@ -234,7 +245,7 @@ class EventDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     

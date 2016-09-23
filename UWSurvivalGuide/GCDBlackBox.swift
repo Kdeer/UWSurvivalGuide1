@@ -11,8 +11,8 @@ import CoreData
 import UIKit
 
 
-func performUIUpdatesOnMain(updates: () -> Void) {
-    dispatch_async(dispatch_get_main_queue()) {
+func performUIUpdatesOnMain(_ updates: @escaping () -> Void) {
+    DispatchQueue.main.async {
         updates()
     }
 }
@@ -21,11 +21,11 @@ func performUIUpdatesOnMain(updates: () -> Void) {
 func fetchAllMeters() -> [MeterParking] {
     
     // Create the Fetch Request
-    let fetchRequest = NSFetchRequest(entityName: "MeterParking")
-    
+//    let fetchRequest = NSFetchRequest(entityName: "MeterParking")
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "MeterParking")
     // Execute the Fetch Request
     do {
-        return try sharedContext.executeFetchRequest(fetchRequest) as! [MeterParking]
+        return try sharedContext.fetch(fetchRequest) as! [MeterParking]
     } catch  let error as NSError {
         print("Error in fetchAllActors(): \(error)")
         return [MeterParking]()
@@ -35,11 +35,11 @@ func fetchAllMeters() -> [MeterParking] {
 func fetchAllPermits() -> [PermitParking] {
     
     // Create the Fetch Request
-    let fetchRequest = NSFetchRequest(entityName: "PermitParking")
-    
+//    let fetchRequest = NSFetchRequest(entityName: "PermitParking")
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "PermitParking")
     // Execute the Fetch Request
     do {
-        return try sharedContext.executeFetchRequest(fetchRequest) as! [PermitParking]
+        return try sharedContext.fetch(fetchRequest) as! [PermitParking]
     } catch  let error as NSError {
         print("Error in fetchAllActors(): \(error)")
         return [PermitParking]()
@@ -57,11 +57,11 @@ func saveContext() {
 func fetchAllVisitors() -> [VisitorParking] {
     
     // Create the Fetch Request
-    let fetchRequest = NSFetchRequest(entityName: "VisitorParking")
-    
+//    let fetchRequest = NSFetchRequest(entityName: "VisitorParking")
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "VisitorParking")
     // Execute the Fetch Request
     do {
-        return try sharedContext.executeFetchRequest(fetchRequest) as! [VisitorParking]
+        return try sharedContext.fetch(fetchRequest) as! [VisitorParking]
     } catch  let error as NSError {
         print("Error in fetchAllActors(): \(error)")
         return [VisitorParking]()
@@ -71,11 +71,11 @@ func fetchAllVisitors() -> [VisitorParking] {
 func fetchExpectedEvents() -> [ExpectedEvent] {
     
     // Create the Fetch Request
-    let fetchRequest = NSFetchRequest(entityName: "ExpectedEvent")
-    
+//    let fetchRequest = NSFetchRequest(entityName: "ExpectedEvent")
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "ExpectedEvent")
     // Execute the Fetch Request
     do {
-        return try sharedContext.executeFetchRequest(fetchRequest) as! [ExpectedEvent]
+        return try sharedContext.fetch(fetchRequest) as! [ExpectedEvent]
     } catch  let error as NSError {
         print("Error in fetchAllActors(): \(error)")
         return [ExpectedEvent]()
@@ -85,11 +85,11 @@ func fetchExpectedEvents() -> [ExpectedEvent] {
 func fetchAllNews() -> [News] {
     
     // Create the Fetch Request
-    let fetchRequest = NSFetchRequest(entityName: "News")
-    
+//    let fetchRequest = NSFetchRequest(entityName: "News")
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "News")
     // Execute the Fetch Request
     do {
-        return try sharedContext.executeFetchRequest(fetchRequest) as! [News]
+        return try sharedContext.fetch(fetchRequest) as! [News]
     } catch  let error as NSError {
         print("Error in fetchAllActors(): \(error)")
         return [News]()

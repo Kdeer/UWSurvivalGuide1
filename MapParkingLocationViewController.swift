@@ -34,13 +34,13 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        mapView.mapType = .Hybrid
+        mapView.mapType = .hybrid
         initParkingType()
         loadOneParkingList()
 
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print(monitorParkingList.count, visitorParkingList.count, permitParkingList.count, meterParkingList.count, mapAnnotations.count)
     }
@@ -57,11 +57,11 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    @IBAction func segmentSelected(sender: AnyObject) {
+    @IBAction func segmentSelected(_ sender: AnyObject) {
         
         switch segmentControl.selectedSegmentIndex {
         case 0:
@@ -82,11 +82,11 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
     
     func getMonitorParkingData(){
         
-        UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/watpark.json", parameters: [:]){(result, error) in
+        _ = UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/watpark.json", parameters: [:]){(result, error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                    if let meterParkingResult = result["data"] as? [[String:AnyObject]] {
+                    if let meterParkingResult = result?["data"] as? [[String:AnyObject]] {
                         for item in meterParkingResult{
                             self.monitorParkingList.append(MonitorParking(dictionary: item))
                         }
@@ -102,11 +102,11 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
         self.visitorParkingList = fetchAllVisitors()
         
         if visitorParkingList.isEmpty == true {
-        UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/lots/visitor.json", parameters: [:]){(result, error) in
+        _ = UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/lots/visitor.json", parameters: [:]){(result, error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [[String:AnyObject]] {
+                    if let data = result?["data"] as? [[String:AnyObject]] {
                         let visitorParking = data.map() {(dictionary: [String:AnyObject]) -> VisitorParking in
                             let visitorParking = VisitorParking(dictionary: dictionary, context: sharedContext)
                             return visitorParking
@@ -134,7 +134,7 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
             
             if error == nil{
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [[String:AnyObject]]{
+                    if let data = result?["data"] as? [[String:AnyObject]]{
                         let permitParking = data.map() {(dictionary: [String:AnyObject]) -> PermitParking in
                             let permitParking = PermitParking(dictionary: dictionary, context: sharedContext)
                             return permitParking
@@ -160,7 +160,7 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [[String:AnyObject]]{
+                    if let data = result?["data"] as? [[String:AnyObject]]{
                         let meterParking = data.map() {(dictionary: [String:AnyObject]) -> MeterParking in
                             let meterParking = MeterParking(dictionary: dictionary, context: sharedContext)
                             return meterParking
@@ -248,8 +248,8 @@ class MapParkingLocationViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    @IBAction func dismissButton(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButton(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
 }

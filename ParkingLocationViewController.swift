@@ -28,13 +28,13 @@ class ParkingLocationViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapView.mapType = .Hybrid
+        mapView.mapType = .hybrid
         mapView.delegate = self
-        mapView.hidden = false
+        mapView.isHidden = false
     }
     
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         
@@ -53,34 +53,34 @@ class ParkingLocationViewController: UIViewController, MKMapViewDelegate {
         
     }
     
-    @IBAction func DismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func DismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
             if let selectedPin = self.placemark{
                 let mapItem = MKMapItem(placemark: selectedPin)
                 let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-                mapItem.openInMapsWithLaunchOptions(launchOptions)
+                mapItem.openInMaps(launchOptions: launchOptions)
             }
         }
     }
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId)
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
         
         let RunImage = UIImage(named: "direction")
-        let RunButton = UIButton(type: .Custom)
-        RunButton.frame = CGRectMake(0, 0, 27, 27)
-        RunButton.setImage(RunImage, forState: .Normal)
+        let RunButton = UIButton(type: .custom)
+        RunButton.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
+        RunButton.setImage(RunImage, for: UIControlState())
         
         if pinView == nil {
             pinView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
@@ -98,23 +98,23 @@ class ParkingLocationViewController: UIViewController, MKMapViewDelegate {
         if let selectedPin = self.placemark{
             let mapItem = MKMapItem(placemark: selectedPin)
             let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-            mapItem.openInMapsWithLaunchOptions(launchOptions)
+            mapItem.openInMaps(launchOptions: launchOptions)
         }
     }
     
-    func getAddress(latitude: Double, longitude: Double, title: String){
-        indicator.hidden = false
+    func getAddress(_ latitude: Double, longitude: Double, title: String){
+        indicator.isHidden = false
         indicator.startAnimating()
         CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: latitude, longitude: longitude), completionHandler: {(placemarks, error) -> Void in
             
             if error != nil {
-                self.indicator.hidden = true
+                self.indicator.isHidden = true
                 self.indicator.stopAnimating()
-                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .Alert)
-                let OkayAction = UIAlertAction(title: "Okay", style: .Default, handler: nil)
+                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .alert)
+                let OkayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
                 alertController.addAction(OkayAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
-                self.mapView.hidden = true
+                self.present(alertController, animated: true, completion: nil)
+                self.mapView.isHidden = true
                 print("there is an error")
             } else {
                 
@@ -135,7 +135,7 @@ class ParkingLocationViewController: UIViewController, MKMapViewDelegate {
                 let region = MKCoordinateRegion(center: center, span: span)
                 self.mapView.setRegion(region, animated: false)
                 self.indicator.stopAnimating()
-                self.indicator.hidden = true
+                self.indicator.isHidden = true
                 }
             }
         })

@@ -37,26 +37,20 @@ class NewsDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.estimatedRowHeight = 400
         
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: #selector(NewsDetailViewController.shareButtonPressed))
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(NewsDetailViewController.shareButtonPressed))
 
 
 //        viewDidLoadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.TheNumberI = NSUserDefaults.standardUserDefaults().integerForKey("TheNumberI")
+    override func viewWillAppear(_ animated: Bool) {
+        self.TheNumberI = UserDefaults.standard.integer(forKey: "TheNumberI")
         print("\(self.TheNumberI) + This is in detail site")
     }
     
     func shareButtonPressed() {
         let activityViewController = UIActivityViewController(activityItems: [newsList.link], applicationActivities: nil)
-        presentViewController(activityViewController, animated: true, completion: nil)
-        activityViewController.completionWithItemsHandler = {
-            (activity: String?, completed: Bool, items: [AnyObject]?, error: NSError?) -> Void in
-            if completed {
-//                self.dismissViewControllerAnimated(true, completion: nil)
-            }
-        }
+        present(activityViewController, animated: true, completion: nil)
     }
     
     func viewDidLoadData(){
@@ -65,12 +59,12 @@ class NewsDetailViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! NewsTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! NewsTableViewCell
         
         
         cell.timeLabel.text = timeLabelText

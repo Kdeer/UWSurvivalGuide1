@@ -9,7 +9,7 @@
 import Foundation
 
 enum MealType {
-    case Breakfast, Lunch, Dinner
+    case breakfast, lunch, dinner
 }
 
 struct theMeal {

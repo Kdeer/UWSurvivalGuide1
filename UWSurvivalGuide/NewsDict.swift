@@ -21,16 +21,16 @@ class News: NSManagedObject {
     @NSManaged var descriptions: String!
     @NSManaged var descriptions_raw: String!
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
     
     init(dictionary: [String:AnyObject], context: NSManagedObjectContext){
         
-        let entity =  NSEntityDescription.entityForName("News", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity =  NSEntityDescription.entity(forEntityName: "News", in: context)!
+        super.init(entity: entity, insertInto: context)
     
-        id = dictionary["id"] as? Int
+        id = dictionary["id"] as? Int as NSNumber!
         link = dictionary["link"] as? String
         published = dictionary["published"] as? String
         site = dictionary["site"] as? String
@@ -43,10 +43,10 @@ class News: NSManagedObject {
     
     var newsImage: UIImage? {
         get {
-            return UWSGFoodClientModel.Caches.imageCache.imageWithIdentifier(String(id))
+            return UWSGFoodClientModel.Caches.imageCache.imageWithIdentifier(String(describing: id))
         }
         set {
-            UWSGFoodClientModel.Caches.imageCache.storeImage(newValue, withIdentifier: String(id))
+            UWSGFoodClientModel.Caches.imageCache.storeImage(newValue, withIdentifier: String(describing: id))
         }
     }
 }

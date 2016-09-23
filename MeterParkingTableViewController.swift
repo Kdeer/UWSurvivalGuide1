@@ -28,7 +28,7 @@ class MeterParkingTableViewController: UIViewController, UITableViewDelegate, UI
     
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
-        refreshControl.addTarget(self, action: #selector(MeterParkingTableViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(MeterParkingTableViewController.refresh), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         
         self.automaticallyAdjustsScrollViewInsets = false
@@ -42,7 +42,7 @@ class MeterParkingTableViewController: UIViewController, UITableViewDelegate, UI
     func refresh() {
         if meterParkingList.count > 0 {
             for i in 0...meterParkingList.count - 1 {
-                sharedContext.deleteObject(meterParkingList[i])
+                sharedContext.delete(meterParkingList[i])
 
             }
             saveContext()
@@ -66,49 +66,49 @@ class MeterParkingTableViewController: UIViewController, UITableViewDelegate, UI
         }
     }
   
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sectionTitle.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("meterCell", forIndexPath: indexPath)  as! MeterParkingTableViewCell
-        let meterRow = sectionTitle[indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "meterCell", for: indexPath)  as! MeterParkingTableViewCell
+        let meterRow = sectionTitle[(indexPath as NSIndexPath).row]
         
         cell.descriptionLabel.text = meterRow
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("ParkingLocationViewController") as! ParkingLocationViewController
-        controller.meterParking = meterParkingList[indexPath.row]
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "ParkingLocationViewController") as! ParkingLocationViewController
+        controller.meterParking = meterParkingList[(indexPath as NSIndexPath).row]
 
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
 
     }
     
-    @IBAction func MapVersionButton(sender: AnyObject) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapParkingLocationViewController") as! MapParkingLocationViewController
+    @IBAction func MapVersionButton(_ sender: AnyObject) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MapParkingLocationViewController") as! MapParkingLocationViewController
         controller.meterParkingList = self.meterParkingList
         controller.initParkingIndicator = "Meter"
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
     }
     
-    @IBAction func dismissButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
 
     
     func getMeterParkingData(){
-        mapViewParking.enabled = false
+        mapViewParking.isEnabled = false
         if meterParkingList.isEmpty == true {
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("parking/lots/meter.json", parameters: [:]){(result,error) in
             
             if error == nil {
                 performUIUpdatesOnMain(){
-                if let data = result["data"] as? [[String:AnyObject]]{
+                if let data = result?["data"] as? [[String:AnyObject]]{
                     let meterParking = data.map() {(dictionary: [String:AnyObject]) -> MeterParking in
                         let meterParking = MeterParking(dictionary: dictionary, context: sharedContext)
                         return meterParking
@@ -119,7 +119,7 @@ class MeterParkingTableViewController: UIViewController, UITableViewDelegate, UI
                     }
                     saveContext()
                     self.tableView.reloadData()
-                    self.mapViewParking.enabled = true
+                    self.mapViewParking.isEnabled = true
                 }
             }
             }

@@ -24,24 +24,24 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        indicator.hidden = true
+        indicator.isHidden = true
         tableView.delegate = self
         self.automaticallyAdjustsScrollViewInsets = false
                 getOutlets()
         findtheLocation()
-        tableView.hidden = true
+        tableView.isHidden = true
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 340
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return locationInfo.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("FoodOutletsCell", forIndexPath: indexPath) as! FoodOutletsTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "FoodOutletsCell", for: indexPath) as! FoodOutletsTableViewCell
         
-        let outletsRow = locationInfo[indexPath.row].outlet_name
+        let outletsRow = locationInfo[(indexPath as NSIndexPath).row].outlet_name
         let realOutletRow = hardcodingOutlets(outletsRow)
         
         cell.outletsName.text = outletsRow
@@ -54,14 +54,14 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! FoodOutletsTableViewCell
-        let controller = storyboard!.instantiateViewControllerWithIdentifier("FoodOutletTableViewController") as! FoodOutletTableViewController
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! FoodOutletsTableViewCell
+        let controller = storyboard!.instantiateViewController(withIdentifier: "FoodOutletTableViewController") as! FoodOutletTableViewController
         controller.detailOutletImage = imageStruct(theIamge: cell.outletsIcon.image)
-        controller.locationInfo1 = locationInfo[indexPath.row]
+        controller.locationInfo1 = locationInfo[(indexPath as NSIndexPath).row]
         for i in 0...foodOutlets.count - 1 {
             
-        if locationInfo[indexPath.row].outlet_id == foodOutlets[i].outlet_id {
+        if locationInfo[(indexPath as NSIndexPath).row].outlet_id == foodOutlets[i].outlet_id {
         controller.foodInfo = foodOutlets[i]
         }
         }
@@ -71,21 +71,21 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
     
     func findtheLocation(){
         indicator.startAnimating()
-        indicator.hidden = false
+        indicator.isHidden = false
         UWSGFoodClientModel.sharedInstance().taskForGetMethod("foodservices/locations.json", parameters: [:]){(result,error) in
             
             if error != nil {
                 print(error)
-                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .Alert)
-                let OkayAction = UIAlertAction(title: "Okay", style: .Default, handler: nil)
+                let alertController = UIAlertController(title: "Oops!", message: "There is a Network Error", preferredStyle: .alert)
+                let OkayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
                 alertController.addAction(OkayAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
-                self.indicator.hidden = true
+                self.present(alertController, animated: true, completion: nil)
+                self.indicator.isHidden = true
                 self.indicator.stopAnimating()
             }else {
-                self.tableView.hidden = false
+                self.tableView.isHidden = false
                 performUIUpdatesOnMain(){
-                    if let data = result["data"] as? [[String:AnyObject]] {
+                    if let data = result?["data"] as? [[String:AnyObject]] {
                         for item in data {
                             self.locationInfo.append(LocationDict(dictionary: item))
                         }
@@ -96,8 +96,8 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
                     }
                     print(self.outletsName)
                     self.tableView?.reloadData()
-                    self.tableView.hidden = false
-                    self.indicator.hidden = true
+                    self.tableView.isHidden = false
+                    self.indicator.isHidden = true
                     self.indicator.stopAnimating()
                 }
             }
@@ -112,7 +112,7 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
                 print(error)
             }else {
                 performUIUpdatesOnMain(){
-                    if let foodOutletData = result["data"] as? [[String:AnyObject]] {
+                    if let foodOutletData = result?["data"] as? [[String:AnyObject]] {
                         
                         for result in foodOutletData {
                             self.foodOutlets.append(FoodDict(dictionary: result))
@@ -125,11 +125,11 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
         
     }
     
-    func hardcodingOutlets(string: String) -> String{
+    func hardcodingOutlets(_ string: String) -> String{
         var string = string
         if string == "Bon Appétit - Davis Centre" {
             string = "Bon Appetit - Davis Centre"
-        }else if string.rangeOfString("Café")?.isEmpty != true {
+        }else if string.range(of: "Café")?.isEmpty != true {
             let newString = string.replace("Café", withString: "Cafe")
             return newString
         }
@@ -146,8 +146,8 @@ class FoodOutletsTableViewController: UIViewController, UITableViewDelegate, UIT
 
 extension String
 {
-    func replace(target: String, withString: String) -> String
+    func replace(_ target: String, withString: String) -> String
     {
-        return self.stringByReplacingOccurrencesOfString(target, withString: withString, options: NSStringCompareOptions.LiteralSearch, range: nil)
+        return self.replacingOccurrences(of: target, with: withString, options: NSString.CompareOptions.literal, range: nil)
     }
 }

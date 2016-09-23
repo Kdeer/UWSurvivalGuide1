@@ -11,11 +11,11 @@ import Foundation
 extension FoodOutletTableViewController {
     
     func detectTheMeal(){
-        if whichMeal?.rangeOfString("Lunch") != nil{
+        if whichMeal?.range(of: "Lunch") != nil{
             whichMeal = "lunch"
-        }else if whichMeal?.rangeOfString("Dinner") != nil {
+        }else if whichMeal?.range(of: "Dinner") != nil {
             whichMeal = "dinner"
-        }else if whichMeal?.rangeOfString("Breakfast") != nil {
+        }else if whichMeal?.range(of: "Breakfast") != nil {
             whichMeal = "breakfast"
         }
     }
@@ -28,7 +28,7 @@ extension FoodOutletTableViewController {
             }else {
                 performUIUpdatesOnMain(){
                     //It starts with "data" first
-                    if let menuData = result["data"] as? [String:AnyObject]{
+                    if let menuData = result?["data"] as? [String:AnyObject]{
                         //under the "data", we have "outlets" and "date"
                         if let date = menuData["date"] as? [String:AnyObject]{
                             let startDate = date["start"] as? String
@@ -78,7 +78,7 @@ extension FoodOutletTableViewController {
                                 if self.whichMeal == "lunch"  {
                                     self.whichMeal = "Lunch"
                                 }
-                                let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MenuTableViewController") as! MenuTableViewController
+                                let controller = self.storyboard!.instantiateViewController(withIdentifier: "MenuTableViewController") as! MenuTableViewController
                                 controller.outlet_ID = self.foodInfo.outlet_id
                                 controller.whichMeal = self.weekTime
                                 controller.newWeek = self.newWeek
